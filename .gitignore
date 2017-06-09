@@ -1,6 +1,12 @@
 __pycache__
 .py[cod]
-venv
+
+venv*
+
+build
+dist
+main.spec
+
 config.debug.cfg
 output.txt
 
