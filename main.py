@@ -1,10 +1,12 @@
 import configparser
+import time
 import os.path
 
 import travian4api
 
 CONFIG_FILE = 'config.cfg'
 DEBUG_CONFIG_FILE = 'config.debug.cfg'
+SLEEP_SEC = 1
 
 
 def load_config():
@@ -33,9 +35,30 @@ def open_account():
 def write_data():
     output_file = config['OUTPUT']['file_path']
 
-    with open(output_file, 'w') as file:
-        for v in account.villages:
-            file.write(v.name)
+    with open(output_file, 'a') as file:
+        alliance = account.alliance
+        loctime = time.time()
+        alliance_name = alliance['name']
+        data = 'time: {}, alliance: {}\n'.format(
+            loctime,
+            alliance_name)
+        file.write(data)
+        members = alliance['members']
+        for member in members:
+            username = member['name']
+            online = member['online']
+            data = 'user: {}, online: {}\n'.format(
+                username,
+                online)
+            file.write(data)
+        file.write('\n')
+
+
+def main():
+    while True:
+        print('write data')
+        write_data()
+        time.sleep(SLEEP_SEC)
 
 
 if __name__ == '__main__':
@@ -50,5 +73,5 @@ if __name__ == '__main__':
 
     account = open_account()
 
-    write_data()
+    main()
 
